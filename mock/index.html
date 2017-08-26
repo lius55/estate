@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>不动产首页</title>
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/swiper.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.lazyloadxt.spinner.css">
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/swiper.jquery.min.js"></script>
+	<script type="text/javascript" src="js/base.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/Chart.min.js"></script>
+	<script type="text/javascript" src="js/conversion.js"></script>
+	<script type="text/javascript" src="js/jquery.easing.1.3.min.js"></script>
+	<script type="text/javascript" src="js/jquery.lazyloadxt.bg.min.js"></script>
+	<script type="text/javascript" src="js/jquery.lazyloadxt.min.js"></script>
+</head>
+<body>
+<div id="preloader" style="display: none;">
+	<img src="img/loading.gif" alt="">		
+</div>
+<script type="text/javascript">
+	var oemSource = '';
+</script>
+
+<header id="header">
+	<div class="header-content-wrapper">
+		<p class="header-copy">家园网</p>
+		<div class="header-nav-wrapper right">
+			<nav class="header-nav left">
+				<ul class="header-list f-12 left">
+					<li><a href="https://minpaku-bukken.com/">首页</a></li>
+					<li><a href="https://minpaku-bukken.com/about">我要租房</a></li>
+					<li><a href="https://minpaku-bukken.com/invests/list">我要买房</a></li>
+					<li><a href="https://minpaku-bukken.com/owner">我有房源</a></li>
+				</ul>
+			</nav>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+</header>
+
+<div id="headbar">
+	<div class="headbar-contents-wrapper">
+		<div class="headbar-person left">
+			<a href="https://minpaku-bukken.com/">
+				<p class="headbar-person-name">
+					<img src="img/logo.png" class="headbar-logo" alt="民泊物件.com">				
+				</p>
+			</a>
+		</div>
+		<div class="total-count-box left">
+			<p class="f-14">累計房源<span style="margin-left:5px;">4,229件</span></p>
+		</div>
+		<div class="headbar-right-wrapper right">
+			<div class="headbar-nav-wrapper left">
+				<div class="headbar-search-area left">
+					<div class="headbar-search-contents clearfix" style="border-right: none;">
+						<form enctype="multipart/form-data" id="room_search_address_form" action="https://minpaku-bukken.com/map" method="get">
+							<input type="text" name="search_address_index" placeholder="请输入区域或小区名来找房" class="headbar-search-input left change-fill">
+							<button type="submit" class="headbar-search-btn left">开始找房</button>
+						</form>
+					</div>
+				</div>
+				<div class="haadbar-nav-area">
+					
+					<a href="https://minpaku-bukken.com/users/login" class="headbar-link user left ">
+						ログイン・登録
+					</a>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+
+<div id="wrap">
+	<div id="main-content">
+
+	<script type="text/javascript">
+		$(function() {
+			//スライダーのPC/SP設定
+			var w = $(window).width(),
+					p = 568,
+					tmb_ranking_w = 540,
+					per_view_fv,
+					per_view_ranking;
+			if (w < p) {
+				//スマホの場合
+				per_view_fv = 1;
+				per_view_ranking = 1;
+				swiperBtnPosition = '15px';
+			} else {
+				per_view_fv = w / 540;
+				if (per_view_fv < 2) {
+					per_view_fv = 2;
+				}
+				per_view_ranking = w / tmb_ranking_w;
+				swiperBtnPosition = '25%';
+			}
+			//コンテンツバー
+			new Swiper('#top_img_list .swiper-container', {
+					spaceBetween: 6,
+					autoplay: 3000,
+					loop: true,
+					speed: 1200,
+					slidesPerView: per_view_fv,
+					centeredSlides: true,
+					pagination: '#top_img_list .swiper-pagination',
+					paginationClickable: true,
+			});
+			
+			//アクセスランキング
+			new Swiper('#room_ranking_list .swiper-container', {
+					spaceBetween: 0,
+					autoplay: 3000,
+					loop: true,
+					speed: 200,
+					slidesPerView: per_view_ranking,
+					effect: 'coverflow',
+					coverflow: {
+							rotate: 0,
+							stretch: -50,
+							depth: 150,
+							modifier: 1,
+							slideShadows : false,
+					},
+					centeredSlides: true,
+					nextButton: '#room_ranking_list .swiper-button-next',
+					prevButton: '#room_ranking_list .swiper-button-prev',
+					pagination: '#room_ranking_list .swiper-pagination',
+					onSlideChangeStart: function() {
+						$(window).trigger('scroll');
+					},
+					onSlideChangeEnd: function() {
+						$(window).trigger('scroll');
+					}
+			});
+			var w = $(window).width(),
+			p = 568;
+			$('#room_ranking_list .swiper-button-prev.swiper-button-black').css('left',swiperBtnPosition);
+			$('#room_ranking_list .swiper-button-next.swiper-button-black').css('right',swiperBtnPosition);
+			
+			//新着物件の画像のスライダー
+			new Swiper('#room_recent_list .swiper-container', {
+				spaceBetween: 0,
+				autoplay: false,
+				loop: true,
+				centeredSlides: true,
+				nextButton: '.swiper-button-next',
+				prevButton: '.swiper-button-prev',
+				onSlideChangeStart: function() {
+					$(window).trigger('scroll');
+				},
+				onSlideChangeEnd: function() {
+					$(window).trigger('scroll');
+				}
+			});
+		});
+	</script>
+
+	<div id="top_img_list" class="top-fv-wrap">
+		<div class="top-fv-con-wrap">
+			<div class="swiper-container swiper-container-horizontal">
+				<div class="swiper-wrapper" style="transform: translate3d(-4929.9px, 0px, 0px); transition-duration: 0ms;"><div class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="6" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://minpaku-bukken.com/users/plan">
+								<div class="top-fv-img">
+									<img src="img/premium.jpg" alt="民泊運営を成功させたい方限定、1日早く情報が手に入る">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">ホスト</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://minpaku-bukken.com/users/plan" style="color:#000; letter-spacing:1px;">民泊運営に成功したい方限定！プレミアムプラン</a>
+								</h2>
+								<p class="top-fv-txt">民泊物件.comプレミアムプランは、１日早く物件情報を閲覧、詳細住所の表示機能などが使えます。是非ご活用ください。</p>
+							</div>
+						</div>
+					</div><div class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="7" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://business.minpaku-bukken.com/">
+								<div class="top-fv-img">
+									<img src="img/business.jpg" alt="不動産会社はこちら">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">ビジネス</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://business.minpaku-bukken.com/" style="color:#000; letter-spacing:1px;">不動産会社はこちら&gt;&gt;</a>
+								</h2>
+								<p class="top-fv-txt">民泊物件.comへの物件掲載をご希望の不動産仲介・管理会社はこちらをご覧ください。</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide" data-swiper-slide-index="0" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://minpaku-bukken.com/about">
+								<div class="top-fv-img">
+									<img src="img/minbutsu.jpg" alt="国内最大級の民泊物件サイト">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+								</div>
+								<h1 class="top-fv-title">
+									<a href="https://minpaku-bukken.com/about" style="color:#000; letter-spacing:1px;">国内最大級の民泊物件サイト</a>
+								</h1>
+								<p class="top-fv-txt">民泊物件.comは全国の不動産会社の皆さまから提供された転貸可能物件を集約した国内最大級の不動産ポータルサイトです。</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide" data-swiper-slide-index="1" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://minpaku-bukken.com/cb_campaign">
+								<div class="top-fv-img">
+									<img src="img/cb_campaign.jpg" alt="キャッシュバックキャンペーン">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">期間限定</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://minpaku-bukken.com/cb_campaign" style="color:#000; letter-spacing:1px;">現金最大50,000円キャッシュバック！</a>
+								</h2>
+								<p class="top-fv-txt">期間限定！第2回民泊物件.com成約キャッシュバックキャンペーンを開催いたします。現金最大50,000円キャッシュバックのチャンス！</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide" data-swiper-slide-index="2" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a onclick="location.href=&#39;https://minpakunomadoguchi.com/&#39;; ga(&#39;send&#39;, &#39;event&#39;, &#39;ミンブツ内広告&#39;, &#39;クリック数&#39;, &#39;窓口&#39;);">
+								<div class="top-fv-img">
+									<img src="img/madoguchi.jpg" alt="民泊の窓口">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">NEW!!</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a onclick="location.href=&#39;https://minpakunomadoguchi.com/&#39;; ga(&#39;send&#39;, &#39;event&#39;, &#39;ミンブツ内広告&#39;, &#39;クリック数&#39;, &#39;窓口&#39;);" style="color:#000; letter-spacing:1px;">新サービス「民泊の窓口」をリリース！&gt;&gt;</a>
+								</h2>
+								<p class="top-fv-txt">民泊の窓口は国内のあらゆる民泊関連サービスをまとめた情報サイトです。ホストに必要な情報をお届けします。</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide" data-swiper-slide-index="3" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a onclick="location.href=&#39;https://interior.minpaku-bukken.com&#39;; ga(&#39;send&#39;, &#39;event&#39;, &#39;ミンブツ内広告&#39;, &#39;クリック数&#39;, &#39;NEWインテリア&#39;);">
+								<div class="top-fv-img">
+									<img src="img/interior.jpg" alt="民泊専門インテリアコーディネート">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">おすすめ</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a onclick="location.href=&#39;https://interior.minpaku-bukken.com&#39;; ga(&#39;send&#39;, &#39;event&#39;, &#39;ミンブツ内広告&#39;, &#39;クリック数&#39;, &#39;NEWインテリア&#39;);" style="color:#000; letter-spacing:1px;">民泊専門インテリアコーディネート <br class="pcnone">事例を見る&gt;&gt;</a>
+								</h2>
+								<p class="top-fv-txt">民泊物件.comが民泊専門の「予約が取れる」部屋作りをご提案いたします。丸投げOK、すぐに宿泊できる状態までセッティングいたします。</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide" data-swiper-slide-index="4" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://minpaku-bukken.com/invests/list">
+								<div class="top-fv-img">
+									<img src="img/invests.jpg" alt="投資用売買物件">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">リリース</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://minpaku-bukken.com/invests/list" style="color:#000; letter-spacing:1px;">投資用売買物件情報を見る</a>
+								</h2>
+								<p class="top-fv-txt">民泊物件.com売買版。旅館業法許可取得済の戸建てなどの物件情報を掲載しております。投資用売買物件をお探しの事業主はこちらを御覧ください。</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide" data-swiper-slide-index="5" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://line.me/ti/p/%40ovg3146r" style="color:#000; letter-spacing:1px;">
+								<div class="top-fv-img">
+									<img src="img/line.jpg" alt="LINE友だち追加">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">おすすめ</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://line.me/ti/p/%40ovg3146r" style="color:#000; letter-spacing:1px;">LINE友達になって新着情報をいち早く入手！</a>
+								</h2>
+								<p class="top-fv-txt">LINEで定期的に新着物件・おすすめ物件情報を配信中！民泊物件.com公式アカウントと友達になろう！</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide" data-swiper-slide-index="6" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://minpaku-bukken.com/users/plan">
+								<div class="top-fv-img">
+									<img src="img/premium.jpg" alt="民泊運営を成功させたい方限定、1日早く情報が手に入る">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">ホスト</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://minpaku-bukken.com/users/plan" style="color:#000; letter-spacing:1px;">民泊運営に成功したい方限定！プレミアムプラン</a>
+								</h2>
+								<p class="top-fv-txt">民泊物件.comプレミアムプランは、１日早く物件情報を閲覧、詳細住所の表示機能などが使えます。是非ご活用ください。</p>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide swiper-slide-prev" data-swiper-slide-index="7" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://business.minpaku-bukken.com/">
+								<div class="top-fv-img">
+									<img src="img/business.jpg" alt="不動産会社はこちら">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">ビジネス</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://business.minpaku-bukken.com/" style="color:#000; letter-spacing:1px;">不動産会社はこちら&gt;&gt;</a>
+								</h2>
+								<p class="top-fv-txt">民泊物件.comへの物件掲載をご希望の不動産仲介・管理会社はこちらをご覧ください。</p>
+							</div>
+						</div>
+					</div>
+				<div class="swiper-slide swiper-slide-duplicate swiper-slide-active" data-swiper-slide-index="0" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://minpaku-bukken.com/about">
+								<div class="top-fv-img">
+									<img src="img/minbutsu.jpg" alt="国内最大級の民泊物件サイト">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+								</div>
+								<h1 class="top-fv-title">
+									<a href="https://minpaku-bukken.com/about" style="color:#000; letter-spacing:1px;">国内最大級の民泊物件サイト</a>
+								</h1>
+								<p class="top-fv-txt">民泊物件.comは全国の不動産会社の皆さまから提供された転貸可能物件を集約した国内最大級の不動産ポータルサイトです。</p>
+							</div>
+						</div>
+					</div><div class="swiper-slide swiper-slide-duplicate swiper-slide-next" data-swiper-slide-index="1" style="width: 536.133px; margin-right: 6px;">
+						<div class="top-fv-box">
+							<a href="https://minpaku-bukken.com/cb_campaign">
+								<div class="top-fv-img">
+									<img src="img/cb_campaign.jpg" alt="キャッシュバックキャンペーン">							</div>
+							</a>
+							<div class="top-fv-detail">
+								<div class="fv-tag-inner clearfix">
+									<div class="tags tag-green left">公式</div>
+									<div class="tags tag-green-rev left">期間限定</div>
+								</div>
+								<h2 class="top-fv-title">
+									<a href="https://minpaku-bukken.com/cb_campaign" style="color:#000; letter-spacing:1px;">現金最大50,000円キャッシュバック！</a>
+								</h2>
+								<p class="top-fv-txt">期間限定！第2回民泊物件.com成約キャッシュバックキャンペーンを開催いたします。現金最大50,000円キャッシュバックのチャンス！</p>
+							</div>
+						</div>
+					</div></div>
+				<div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span></div>
+			</div>
+		</div>
+	</div>
+
+<div class="main-ranking-wrapper">
+	<div class="main-list-wrapper" style="background-color:#f4f7f8; padding-bottom:20px;">
+		<p class="main-title" style="text-align:center; padding-left: 0; padding-right: 8px;"><img src="img/icon-room-ranking.png" class="main-title-icon" alt="ランキング">RANKING</p>
+		<p class="sub-title" style="text-align:center; line-height: 1.6;">アクセスランキング</p>
+
+		<div id="room_ranking_list">
+			<div class="swiper-container swiper-container-horizontal swiper-container-3d swiper-container-coverflow">
+				<div class="swiper-wrapper" style="transform: translate3d(-1130.5px, 0px, 0px); transition-duration: 0ms;"><div class="swiper-slide clickable swiper-slide-duplicate" style="cursor: pointer; width: 540px; transform: translate3d(-150px, 0px, -450px) rotateX(0deg) rotateY(0deg); z-index: -2; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/2162" data-target="_blank" data-swiper-slide-index="7">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-hidden" data-bg="https://minbutsu.s3.amazonaws.com/room/2162/thumb/CPDENK24GRMmNVVR.jpg?1502086702" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png"></div>
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No"><span class="tmb-ranking-img-number">8</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix"></div>								
+	<p class="tmb-list-title">家具家電付！新高円寺駅近民泊物件！【2DK】</p>
+	<p class="tmb-list-rentfee" style="display: block">
+									9.8万円<span class="f-12" style="margin-left:10px;">敷 なし / 礼 1ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									東京メトロ丸ノ内線新高円寺駅 徒歩7分<br>
+									東京都杉並区堀ノ内3丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div><div class="swiper-slide clickable swiper-slide-duplicate" style="cursor: pointer; width: 540px; transform: translate3d(-100px, 0px, -300px) rotateX(0deg) rotateY(0deg); z-index: -1; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/2596" data-target="_blank" data-swiper-slide-index="8">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/2596/thumb/L4sCSKRmMBVa99EV.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">9</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			
+	</div>								<p class="tmb-list-title">
+																錦糸町駅徒歩4分！いまがチャンス！　【1R】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									8.5万円<span class="f-12" style="margin-left:10px;">敷 3ヶ月 / 礼 1ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									東京メトロ半蔵門線錦糸町駅 徒歩4分<br>
+									東京都墨田区錦糸4丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable swiper-slide-prev" style="cursor: pointer; width: 540px; transform: translate3d(-50px, 0px, -150px) rotateX(0deg) rotateY(0deg); z-index: 0; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/583" data-target="_blank" data-swiper-slide-index="0">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/583/thumb/hrfqhyxezcxGPP3J.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">1</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			<div class="tags tag-green left">NEW</div>
+				<div class="tags tag-green-rev left">民泊特区</div>
+		
+	</div>								<p class="tmb-list-title">
+																梅田まで１駅２部屋空きあり【2DK】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									5.9万円<span class="f-12" style="margin-left:10px;">敷 なし / 礼 2ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									地下鉄谷町線中崎町駅 徒歩3分<br>
+									大阪府大阪市北区黒崎町								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable swiper-slide-active" style="cursor: pointer; width: 540px; transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg); z-index: 1; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/1876" data-target="_blank" data-swiper-slide-index="1">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/1876/thumb/baxMcXqHQA8e8nGM.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">2</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			<div class="tags tag-green left">NEW</div>
+				<div class="tags tag-green-rev left">民泊特区</div>
+				<div class="tags tag-green-rev left">敷礼ゼロ</div>
+	
+	</div>								<p class="tmb-list-title">
+																（大阪心斎橋エリア）高級デザイナーズマンショ【1DK】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									11万円<span class="f-12" style="margin-left:10px;">敷 なし / 礼 なし</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									御堂筋線心斎橋駅 徒歩8分<br>
+									大阪府大阪市中央区博労町1丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable swiper-slide-next" style="cursor: pointer; width: 540px; transform: translate3d(50px, 0px, -150px) rotateX(0deg) rotateY(0deg); z-index: 0; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/2122" data-target="_blank" data-swiper-slide-index="2">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+							<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/2122/thumb/G9KaYLcnK50Tk99f.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">3</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			<div class="tags tag-green left">NEW</div>
+					<div class="tags tag-green-rev left">敷礼ゼロ</div>
+	
+	</div>								<p class="tmb-list-title">
+																お手頃初期費用24万前後！押上3分！【1R】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									5.4万円<span class="f-12" style="margin-left:10px;">敷 0ヶ月 / 礼 0ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									都営浅草線押上駅 徒歩2分<br>
+									東京都墨田区業平2丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable" style="cursor: pointer; width: 540px; transform: translate3d(100px, 0px, -300px) rotateX(0deg) rotateY(0deg); z-index: -1; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/2593" data-target="_blank" data-swiper-slide-index="3">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/2593/thumb/nMvf8mKCa1P9cFDv.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">4</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			<div class="tags tag-green left">NEW</div>
+				<div class="tags tag-green-rev left">民泊特区</div>
+		
+	</div>								<p class="tmb-list-title">
+																(平成２８年竣工)高級デザイナーズ物件【1LDK】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									9.9万円<span class="f-12" style="margin-left:10px;">敷 なし / 礼 2ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									御堂筋線本町駅 徒歩5分<br>
+									大阪府大阪市西区西本町1丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable" style="cursor: pointer; width: 540px; transform: translate3d(150px, 0px, -450px) rotateX(0deg) rotateY(0deg); z-index: -2; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/1576" data-target="_blank" data-swiper-slide-index="4">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/1576/thumb/ZqJN3V01abzBfLtz.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">5</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			<div class="tags tag-green left">NEW</div>
+				<div class="tags tag-green-rev left">民泊特区</div>
+		
+	</div>								<p class="tmb-list-title">
+																家具家電付き！特区民泊対応新築マンション！【1LDK】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									14.675万円<span class="f-12" style="margin-left:10px;">敷 2ヶ月 / 礼 1ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									京浜急行空港線糀谷駅 徒歩8分<br>
+									東京都大田区西糀谷1丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable" style="cursor: pointer; width: 540px; transform: translate3d(200px, 0px, -600px) rotateX(0deg) rotateY(0deg); z-index: -3; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/2382" data-target="_blank" data-swiper-slide-index="5">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/2382/thumb/Hfe1KK5zccDpvY0C.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">6</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+				<div class="tags tag-green-rev left">民泊特区</div>
+		
+	</div>								<p class="tmb-list-title">
+																【大阪難波エリア】平成19年築！6名収容可！【1LDK】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									9万円<span class="f-12" style="margin-left:10px;">敷 なし / 礼 2ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									JR大和路線JR難波駅 徒歩6分<br>
+									大阪府大阪市浪速区元町2丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable" style="cursor: pointer; width: 540px; transform: translate3d(250px, 0px, -750px) rotateX(0deg) rotateY(0deg); z-index: -4; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/3088" data-target="_blank" data-swiper-slide-index="6">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/3088/thumb/MbyLU54R09gmY3Zf.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">7</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			<div class="tags tag-green left">NEW</div>
+			
+	</div>								<p class="tmb-list-title">
+																京都９分！365日運用可能！合法案件！【1R】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									15.8万円<span class="f-12" style="margin-left:10px;">敷 なし / 礼 4ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									JR奈良線京都駅 徒歩9分<br>
+									京都府京都市南区東九条南山王町								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+															<div class="swiper-slide clickable" style="cursor: pointer; width: 540px; transform: translate3d(300px, 0px, -900px) rotateX(0deg) rotateY(0deg); z-index: -5; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/2162" data-target="_blank" data-swiper-slide-index="7">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/2162/thumb/CPDENK24GRMmNVVR.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">8</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+
+<div class="tags-wrap clearfix">
+			
+	</div>								<p class="tmb-list-title">
+																錦糸町駅徒歩4分！いまがチャンス！　【1R】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									8.5万円<span class="f-12" style="margin-left:10px;">敷 3ヶ月 / 礼 1ヶ月</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									東京メトロ半蔵門線錦糸町駅 徒歩4分<br>
+									東京都墨田区錦糸4丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div>
+									<div class="swiper-slide clickable swiper-slide-duplicate" style="cursor: pointer; width: 540px; transform: translate3d(400px, 0px, -1200px) rotateX(0deg) rotateY(0deg); z-index: -7; transition-duration: 0ms;" data-href="https://minpaku-bukken.com/rooms/view/583" data-target="_blank" data-swiper-slide-index="0">
+						<div class="tmb-ranking-wrapper">
+							<div class="tmb-ranking-img-wrapper left">
+								<div class="swiper-slide-images-cover lazy-loaded" data-error="https://minbutsu.s3.amazonaws.com/assets/images/no_image_S.png" style="background-image: url(&quot;https://minbutsu.s3.amazonaws.com/room/583/thumb/hrfqhyxezcxGPP3J.jpg?1502086702&quot;);"></div>
+								
+								<img src="img/rank.png" class="tmb-sm-only-member" alt="No">								<span class="tmb-ranking-img-number">1</span>
+							</div>
+							<div class="tmb-ranking-contents-wrapper relative left" style="cursor: pointer;">
+								
+<div class="tags-wrap clearfix">
+			<div class="tags tag-green left">NEW</div>
+				<div class="tags tag-green-rev left">民泊特区</div>
+				<div class="tags tag-green-rev left">敷礼ゼロ</div>
+	
+	</div>								<p class="tmb-list-title">
+																（大阪心斎橋エリア）高級デザイナーズマンショ【1DK】
+																</p>
+								<p class="tmb-list-rentfee" style="display: block">
+									11万円<span class="f-12" style="margin-left:10px;">敷 なし / 礼 なし</span>
+								</p>
+								<p class="tmb-list-traffic" style="display: block">
+									御堂筋線心斎橋駅 徒歩8分<br>
+									大阪府大阪市中央区博労町1丁目								</p>
+								<div class="tmb-ranking-contents-hidden overlay-premium" style="display: none"></div>
+								<div class="tmb-ranking-contents-hidden overlay-member" style="display: none"></div>
+							</div>
+						</div>
+					</div></div>
+				<div class="swiper-button-prev swiper-button-black op50" style="left: 25%;"></div>
+				<div class="swiper-button-next swiper-button-black op50" style="right: 25%;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	</div>
+</div>
+
+</body>
+</html>
