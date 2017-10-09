@@ -1,0 +1,17 @@
+.login-form-container {
+	margin: 50px;
+	/*padding-top: 120px;*/
+    /*padding-bottom: 120px;*/
+    padding: 130px 200px;
+}
+.login-form-container .panel-heading {
+	font-size: 25px;
+	text-align: center;
+}
+.login-form-container .form-group {
+	margin: 40px 10px;
+    padding-bottom: 20px;
+}
+.login-btn {
+	text-align: center;
+}
